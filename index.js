@@ -4,7 +4,13 @@ import dotenv from "dotenv";
 import avatarRoutes from "./routes/avatar.js"; // Note the `.js` extension
 import bodyParser from "body-parser";
 import fileUpload from "express-fileupload";
+import path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
+// Define __filename and __dirname in ES module context
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenv.config();
 
@@ -23,8 +29,12 @@ app.use(express.json());
 // Routes
 app.use("/avatar", avatarRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Optional: Define a route for your homepage or other pages
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(port, () => {
